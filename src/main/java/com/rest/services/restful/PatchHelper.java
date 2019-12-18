@@ -1,13 +1,8 @@
 package com.rest.services.restful;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema;
 import com.rest.services.restful.entities.EmployeeEntity;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.json.JsonPatch;
