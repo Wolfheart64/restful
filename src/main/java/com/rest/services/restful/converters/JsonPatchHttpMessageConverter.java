@@ -12,7 +12,6 @@ import javax.json.Json;
 import javax.json.JsonPatch;
 import javax.json.JsonReader;
 import javax.json.JsonWriter;
-import java.io.IOException;
 
 @Component
 public class JsonPatchHttpMessageConverter extends AbstractHttpMessageConverter<JsonPatch> {

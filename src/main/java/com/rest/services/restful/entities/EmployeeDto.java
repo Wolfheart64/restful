@@ -1,8 +1,6 @@
 package com.rest.services.restful.entities;
 
-import lombok.*;
-
-import java.util.Optional;
+import lombok.Data;
 
 @Data
 public class EmployeeDto {

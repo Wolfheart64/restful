@@ -1,7 +1,8 @@
 package com.rest.services.restful;
+
 import org.springframework.http.MediaType;
 
-public final class PatchMediaType{
+public final class PatchMediaType {
     public static final String APPLICATION_JSON_PATCH_VALUE = "application/json-patch+json";
 
     public static final String APPLICATION_MERGE_PATCH_VALUE = "application/merge-patch+json";
