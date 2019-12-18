@@ -68,7 +68,7 @@ public class EmployeesController {
                 .buildAndExpand(newEmployeeDto.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(newEmployeeDto);
     }
 
     @PutMapping("/employees/{id}")
@@ -78,23 +78,16 @@ public class EmployeesController {
         return employeeService.putEmployee(employeeDto, id);
     }
 
-    @PatchMapping("employees/{id}")
-    public ResponseEntity patchEmployee(@RequestBody EmployeeDto employeeDto, @PathVariable Integer id) {
-
-        employeeService.patchEmployee(employeeDto, id);
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
-    }
-
     @PatchMapping(value = "employees-map/{id}", consumes = PatchMediaType.APPLICATION_JSON_PATCH_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity patchMapEmployee(@PathVariable Integer id, @RequestBody JsonPatch JsonPatchDocument) throws Exception {
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeDto patchMapEmployee(@PathVariable Integer id, @RequestBody JsonPatch JsonPatchDocument) throws Exception {
 
         EmployeeDto employeeDtoDataObject = employeeService.getEmployee(id);
         EmployeeEntity employeeEntity = mapperFacade.map(employeeDtoDataObject, EmployeeEntity.class);
         EmployeeEntity employeeEntityPatched = patchHelper.patch(JsonPatchDocument, employeeEntity, EmployeeEntity.class);
         employeeRepository.save(employeeEntityPatched);
 
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        return mapperFacade.map(employeeEntityPatched, EmployeeDto.class);
     }
 
 }
