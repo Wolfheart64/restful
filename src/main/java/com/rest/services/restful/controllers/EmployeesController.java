@@ -4,7 +4,6 @@ import com.rest.services.restful.PatchHelper;
 import com.rest.services.restful.PatchMediaType;
 import com.rest.services.restful.configurations.OrikaMapperConfig;
 import com.rest.services.restful.entities.EmployeeDto;
-import com.rest.services.restful.entities.EmployeeEntity;
 import com.rest.services.restful.entities.EmployeeRepository;
 import com.rest.services.restful.services.EmployeeService;
 import ma.glasnost.orika.MapperFacade;
@@ -80,14 +79,9 @@ public class EmployeesController {
 
     @PatchMapping(value = "employees-map/{id}", consumes = PatchMediaType.APPLICATION_JSON_PATCH_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeDto patchMapEmployee(@PathVariable Integer id, @RequestBody JsonPatch JsonPatchDocument) throws Exception {
+    public EmployeeDto patchEmployee(@PathVariable Integer id, @RequestBody JsonPatch JsonPatchDocument) throws Exception {
 
-        EmployeeDto employeeDtoDataObject = employeeService.getEmployee(id);
-        EmployeeEntity employeeEntity = mapperFacade.map(employeeDtoDataObject, EmployeeEntity.class);
-        EmployeeEntity employeeEntityPatched = patchHelper.patch(JsonPatchDocument, employeeEntity, EmployeeEntity.class);
-        employeeRepository.save(employeeEntityPatched);
-
-        return mapperFacade.map(employeeEntityPatched, EmployeeDto.class);
+        return employeeService.patchMapEmployee(id, JsonPatchDocument);
     }
 
 }

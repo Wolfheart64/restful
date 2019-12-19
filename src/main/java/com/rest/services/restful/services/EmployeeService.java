@@ -1,15 +1,14 @@
 package com.rest.services.restful.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rest.services.restful.PatchHelper;
 import com.rest.services.restful.entities.EmployeeDto;
 import com.rest.services.restful.entities.EmployeeEntity;
 import com.rest.services.restful.entities.EmployeeRepository;
 import ma.glasnost.orika.MapperFacade;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import javax.json.JsonPatch;
 
 @Service
 public class EmployeeService {
@@ -18,12 +17,12 @@ public class EmployeeService {
 
     private final MapperFacade mapperFacade;
 
-    private final ObjectMapper objectMapper;
+    private final PatchHelper patchHelper;
 
-    public EmployeeService(EmployeeRepository employeeRepository, MapperFacade mapperFacade, ObjectMapper objectMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, MapperFacade mapperFacade, ObjectMapper objectMapper, PatchHelper patchHelper) {
         this.employeeRepository = employeeRepository;
         this.mapperFacade = mapperFacade;
-        this.objectMapper = objectMapper;
+        this.patchHelper = patchHelper;
     }
 
     public EmployeeDto getEmployee(int id) {
@@ -59,26 +58,12 @@ public class EmployeeService {
                 });
     }
 
-    public ResponseEntity patchEmployee(EmployeeDto employeeDto, Integer id) {
-
-        EmployeeEntity employeeEntity = mapperFacade.map(employeeDto, EmployeeEntity.class);
-
-        return employeeRepository.findById(id).map(employeeEntity1 -> {
-            employeeEntity1.setName(employeeEntity.getName());
-            employeeEntity1.setDescription(employeeEntity.getDescription());
-            employeeRepository.save(employeeEntity1);
-            return ResponseEntity.ok(HttpStatus.OK);
-        })
-                .orElseGet(() -> {
-                    employeeEntity.setId(id);
-                    employeeRepository.save(employeeEntity);
-                    return ResponseEntity.ok(HttpStatus.CREATED);
-                });
-
-    }
-
-    public void patchMapEmployee(Map<String, Object> employeeDto, int id) {
-        EmployeeEntity employeeEntity = employeeRepository.findById(id);
+    public EmployeeDto patchMapEmployee(Integer id, JsonPatch jsonPatchDocument) throws Exception {
+        EmployeeDto employeeDtoDataObject = getEmployee(id);
+        EmployeeEntity employeeEntity = mapperFacade.map(employeeDtoDataObject, EmployeeEntity.class);
+        EmployeeEntity employeeEntityPatched = patchHelper.patch(jsonPatchDocument, employeeEntity, EmployeeEntity.class);
+        employeeRepository.save(employeeEntityPatched);
+        return mapperFacade.map(employeeEntityPatched, EmployeeDto.class);
 
     }
 
