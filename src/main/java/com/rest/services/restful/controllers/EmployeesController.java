@@ -22,21 +22,9 @@ import java.net.URI;
 public class EmployeesController {
 
     private final EmployeeService employeeService;
-    private final MapperFacade mapperFacade;
-    private final PatchHelper patchHelper;
-    private final EmployeeRepository employeeRepository;
 
-    public EmployeesController(EmployeeService employeeService,
-                               EmployeeRepository employeeRepository,
-                               OrikaMapperConfig orikaMapper,
-                               EmployeeRepository employeeRepository1,
-                               MapperFacade mapperFacade,
-                               PatchHelper patchHelper,
-                               EmployeeRepository employeeRepository2) {
+    public EmployeesController(EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.mapperFacade = mapperFacade;
-        this.patchHelper = patchHelper;
-        this.employeeRepository = employeeRepository2;
     }
 
     @GetMapping("/ping")
